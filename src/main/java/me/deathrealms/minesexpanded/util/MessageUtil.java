@@ -2,6 +2,7 @@ package me.deathrealms.minesexpanded.util;
 
 import me.deathrealms.minesexpanded.MinesExpanded;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.md_5.bungee.api.ChatColor;
@@ -63,7 +64,7 @@ public class MessageUtil {
     }
 
     public static Component component(String message) {
-        return MiniMessage.miniMessage().deserialize(bungeeToMini(message));
+        return MiniMessage.miniMessage().deserialize(bungeeToMini(message)).applyFallbackStyle(TextDecoration.ITALIC.withState(false));
     }
 
     public static String colorize(String message) {

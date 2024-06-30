@@ -29,7 +29,6 @@ public final class MinesExpanded extends JavaPlugin {
 
         MessageUtil.loadMessages(this);
         this.mineRegistry = new MineRegistry();
-
         this.mineRegistry.registerMines();
 
         LegacyPaperCommandManager<CommandSender> commandManager = new LegacyPaperCommandManager<>(this, ExecutionCoordinator.simpleCoordinator(), SenderMapper.identity());

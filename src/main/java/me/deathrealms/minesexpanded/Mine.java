@@ -22,6 +22,10 @@ public class Mine {
         this.name = name;
     }
 
+    public MineFile getFile() {
+        return new MineFile(this);
+    }
+
     public String getName() {
         return this.name;
     }

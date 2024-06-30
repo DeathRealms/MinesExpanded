@@ -54,6 +54,7 @@ public class CreateCommand implements MECommand {
 
                                 mine.setMin(BukkitAdapter.adapt(player.getWorld(), region.getMinimumPoint()));
                                 mine.setMax(BukkitAdapter.adapt(player.getWorld(), region.getMaximumPoint()));
+                                mine.setTeleport(mine.getMax().clone().add(0, 1, 0));
 
                                 file.create();
                                 file.save();

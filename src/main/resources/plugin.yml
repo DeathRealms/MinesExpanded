@@ -1,7 +1,7 @@
 name: MinesExpanded
 version: '${version}'
 main: me.deathrealms.minesexpanded.MinesExpanded
-#api-version: '1.20'
+api-version: '1.13'
 authors: [DeathRealms]
 depend:
   - WorldEdit

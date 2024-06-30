@@ -27,34 +27,42 @@ public class MineRegistry {
         return this.MINES.containsKey(name);
     }
 
+    public Map<String, Mine> getMines() {
+        return this.MINES;
+    }
+
     public void registerMines() {
         File minesFolder = new File(MinesExpanded.instance().getDataFolder() + "/mines");
         if (!minesFolder.exists()) return;
 
-        for (File file : minesFolder.listFiles()) {
-            if (file.getName().endsWith(".yml")) {
-                Mine mine = new Mine(file.getName().replace(".yml", ""));
-                MineFile mineFile = new MineFile(mine);
+        File[] files = minesFolder.listFiles();
+        if (files == null) return;
 
-                FileConfiguration config = mineFile.config();
-                mine.setResetTime(config.getInt("resetTime"));
-                mine.setResetPercentage(config.getInt("resetPercentage"));
-                mine.setTeleport(config.getLocation("teleport", config.getLocation("max")));
-                mine.setMin(config.getLocation("min"));
-                mine.setMax(config.getLocation("max"));
+        for (File file : files) {
+            String fileName = file.getName();
+            if (!fileName.endsWith(".yml")) continue;
 
-                Map<Material, Float> blocks = new HashMap<>();
-                ConfigurationSection blocksSection = config.getConfigurationSection("blocks");
+            Mine mine = new Mine(fileName.replace(".yml", ""));
+            MineFile mineFile = new MineFile(mine);
 
-                if (blocksSection != null) {
-                    for (String key : blocksSection.getKeys(false)) {
-                        blocks.put(Material.getMaterial(key), (float) blocksSection.getDouble(key));
-                    }
-                    mine.setBlocks(blocks);
+            FileConfiguration config = mineFile.config();
+            mine.setResetTime(config.getInt("resetTime"));
+            mine.setResetPercentage(config.getInt("resetPercentage"));
+            mine.setTeleport(config.getLocation("teleport", config.getLocation("max").clone().add(0, 1, 0)));
+            mine.setMin(config.getLocation("min"));
+            mine.setMax(config.getLocation("max"));
+
+            Map<Material, Float> blocks = new HashMap<>();
+            ConfigurationSection blocksSection = config.getConfigurationSection("blocks");
+
+            if (blocksSection != null) {
+                for (String key : blocksSection.getKeys(false)) {
+                    blocks.put(Material.getMaterial(key), (float) blocksSection.getDouble(key));
                 }
-
-                addMine(mine);
+                mine.setBlocks(blocks);
             }
+
+            addMine(mine);
         }
     }
 }
