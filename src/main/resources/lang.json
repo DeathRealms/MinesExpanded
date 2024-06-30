@@ -1,0 +1,8 @@
+{
+  "prefix": "&8[&6MinesExpanded&8] {0}",
+  "mines.reload.success": "&7Reloaded plugin configurations.",
+
+  "mines.create.no_selection": "&cYou must make a selection first.",
+  "mines.create.exists": "&7{0} &cmine already exists. Edit it with <hover:show_text:\"&7Click to edit mine\"><click:run_command:\"/mines edit {0}\">&7/mines edit {0}</click></hover>",
+  "mines.create.success": "&7Mine &a{0} &7created."
+}

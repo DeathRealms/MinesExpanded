@@ -1,0 +1,12 @@
+/server/
+*.sh
+.idea/
+.gradle/
+build/
+out/
+*.iml
+.gradletasknamecache
+*.bat
+target/
+docs/
+.DS_Store
