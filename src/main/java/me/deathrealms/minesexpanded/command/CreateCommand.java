@@ -1,5 +1,6 @@
 package me.deathrealms.minesexpanded.command;
 
+import com.sk89q.worldedit.IncompleteRegionException;
 import com.sk89q.worldedit.LocalSession;
 import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
@@ -61,10 +62,10 @@ public class CreateCommand implements MECommand {
 
                                 plugin.mineRegistry().addMine(mine);
                                 plugin.mineServices().addService(mine);
+
                                 MessageUtil.message(player, Message.CREATE_SUCCESS, name);
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                                MessageUtil.message(player, "&cAn error occurred while creating the mine. Check the console for more information.");
+                            } catch (IncompleteRegionException e) {
+                                MessageUtil.message(player, "&cUnable to create mine. Please make a selection and try again.");
                             }
                         })
         );
