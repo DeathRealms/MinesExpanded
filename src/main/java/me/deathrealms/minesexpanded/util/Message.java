@@ -5,7 +5,8 @@ public enum Message {
     RELOAD_SUCCESS("mines.reload.success"),
     CREATE_NO_SELECTION("mines.create.no_selection"),
     CREATE_EXISTS("mines.create.exists"),
-    CREATE_SUCCESS("mines.create.success");
+    CREATE_SUCCESS("mines.create.success"),
+    EDIT_NO_MINE("mines.edit.no_mine");
 
     private final String key;
 

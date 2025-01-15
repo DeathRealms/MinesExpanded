@@ -2,14 +2,19 @@ package me.deathrealms.minesexpanded.command;
 
 import dev.triumphteam.gui.builder.item.ItemBuilder;
 import dev.triumphteam.gui.guis.Gui;
+import dev.triumphteam.gui.guis.PaginatedGui;
 import me.deathrealms.minesexpanded.Mine;
 import me.deathrealms.minesexpanded.MineFile;
 import me.deathrealms.minesexpanded.MinesExpanded;
+import me.deathrealms.minesexpanded.util.Message;
 import me.deathrealms.minesexpanded.util.MessageUtil;
 import me.deathrealms.minesexpanded.util.SignMenu;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.incendo.cloud.bukkit.BukkitCommandManager;
 import org.incendo.cloud.description.Description;
 import org.incendo.cloud.parser.standard.StringParser;
@@ -30,65 +35,157 @@ public class EditCommand implements MECommand {
                             String name = context.get("name");
 
                             if (!plugin.mineRegistry().hasMine(name)) {
-                                player.sendMessage("That mine does not exist.");
+                                MessageUtil.message(player, Message.EDIT_NO_MINE, name);
                                 return;
                             }
 
-                            Mine mine = plugin.mineRegistry().getMine(name);
-                            Gui mainMenu = Gui.gui()
-                                    .title(MessageUtil.component("Editing: " + name))
-                                    .rows(5)
-                                    .create();
-
-                            mainMenu.setDefaultClickAction(event -> event.setCancelled(true));
-
-                            mainMenu.setItem(2, 3, ItemBuilder.from(Material.DIAMOND_PICKAXE).name(MessageUtil.component("&6Reset Time"))
-                                    .lore(MessageUtil.component("&7Set the reset time of the mine.")).asGuiItem(event -> {
-                                        SignMenu.open(player, new String[]{"", "^^^", "Enter reset time", "in seconds."}, lines -> {
-                                            try {
-                                                int time = Integer.parseInt(lines[0]);
-                                                mine.setResetTime(time);
-                                                MineFile file = mine.getFile();
-                                                file.save();
-                                                player.sendMessage("Reset time set to " + time + " seconds.");
-                                            } catch (NumberFormatException e) {
-                                                player.sendMessage("Invalid number.");
-                                            }
-                                        });
-                                    }));
-
-                            mainMenu.setItem(2, 5, ItemBuilder.from(Material.DIAMOND).name(MessageUtil.component("&6Reset Percentage"))
-                                    .lore(MessageUtil.component("&7Set the reset percentage of the mine.")).asGuiItem(event -> {
-                                        SignMenu.open(player, new String[]{"", "^^^", "Enter new", "reset percentage."}, lines -> {
-                                            try {
-                                                int percentage = Integer.parseInt(lines[0]);
-                                                mine.setResetPercentage(percentage);
-                                                MineFile file = mine.getFile();
-                                                file.save();
-                                                player.sendMessage("Reset percentage set to " + percentage + "%.");
-                                            } catch (NumberFormatException e) {
-                                                player.sendMessage("Invalid number.");
-                                            }
-                                        });
-                                    }));
-
-                            mainMenu.setItem(2, 7, ItemBuilder.from(Material.ENDER_PEARL).name(MessageUtil.component("&6Teleport Location"))
-                                    .lore(MessageUtil.component("&7Set the teleport location of the mine.")).asGuiItem(event -> {
-                                        mine.setTeleport(player.getLocation());
-                                        mine.getFile().save();
-                                        player.sendMessage("Teleport location set to your current location.");
-                                    }));
-
-                            mainMenu.setItem(4, 3, ItemBuilder.from(Material.STONE).name(MessageUtil.component("&6Blocks"))
-                                    .lore(MessageUtil.component("&7Set the blocks of the mine.")).asGuiItem(event -> {
-                                        player.sendMessage("Coming soon.");
-                                    }));
-
-
-                            mainMenu.setItem(5, 1, ItemBuilder.from(Material.ARROW).name(MessageUtil.component("&6Back")).asGuiItem(event -> player.performCommand("mines")));
-
-                            mainMenu.open(player);
+                            openMainGui(player, plugin.mineRegistry().getMine(name), plugin);
                         })
         );
+    }
+
+    private void openMainGui(Player player, Mine mine, MinesExpanded plugin) {
+        Gui mainMenu = Gui.gui()
+                .title(MessageUtil.component("Editing: " + mine.getName()))
+                .rows(5)
+                .disableAllInteractions()
+                .create();
+
+        mainMenu.setItem(2, 3, ItemBuilder.from(Material.DIAMOND_PICKAXE)
+                .name(MessageUtil.component("&6Reset Time"))
+                .lore(
+                        MessageUtil.component(""),
+                        MessageUtil.component("&aCurrent: &7" + mine.getResetTime() + " seconds"),
+                        MessageUtil.component(""),
+                        MessageUtil.component("&7Set how often the mine will reset.")
+                )
+                .asGuiItem(event -> {
+                    SignMenu.open(player, new String[]{String.valueOf(mine.getResetTime()), "^^^", "Time between each", "reset in seconds."}, lines -> {
+                        try {
+                            int time = Integer.parseInt(lines[0]);
+                            mine.setResetTime(time);
+                            MineFile file = mine.getFile();
+                            file.save();
+                            player.playSound(player, Sound.BLOCK_NOTE_BLOCK_PLING, 1, 1);
+                        } catch (NumberFormatException e) {
+                            player.sendMessage("Invalid number.");
+                        }
+                        Bukkit.getScheduler().runTask(plugin, () -> openMainGui(player, mine, plugin));
+                    });
+                }));
+
+        mainMenu.setItem(2, 5, ItemBuilder.from(Material.DIAMOND)
+                .name(MessageUtil.component("&6Reset Percentage"))
+                .lore(
+                        MessageUtil.component(""),
+                        MessageUtil.component("&aCurrent: &7" + mine.getResetPercentage() + "%"),
+                        MessageUtil.component(""),
+                        MessageUtil.component("&7Set the percentage of the mine left before reset.")
+                )
+                .asGuiItem(event -> {
+                    SignMenu.open(player, new String[]{String.valueOf(mine.getResetPercentage()), "^^^", "Percent left of", "mine until reset."}, lines -> {
+                        try {
+                            int percentage = Integer.parseInt(lines[0]);
+                            mine.setResetPercentage(percentage);
+                            MineFile file = mine.getFile();
+                            file.save();
+                            player.playSound(player, Sound.BLOCK_NOTE_BLOCK_PLING, 1, 1);
+                        } catch (NumberFormatException e) {
+                            player.sendMessage("Invalid number.");
+                        }
+                        Bukkit.getScheduler().runTask(plugin, () -> openMainGui(player, mine, plugin));
+                    });
+                }));
+
+        mainMenu.setItem(2, 7, ItemBuilder.from(Material.ENDER_PEARL)
+                .name(MessageUtil.component("&6Teleport Location"))
+                .lore(
+                        MessageUtil.component(""),
+                        MessageUtil.component("&7Set the location to teleport to when the mine is reset.")
+                )
+                .asGuiItem(event -> {
+                    mine.setTeleport(player.getLocation());
+                    mine.getFile().save();
+                    player.playSound(player, Sound.BLOCK_NOTE_BLOCK_PLING, 1, 1);
+                    openMainGui(player, mine, plugin);
+                }));
+
+        mainMenu.setItem(4, 3, ItemBuilder.from(Material.STONE)
+                .name(MessageUtil.component("&6Blocks"))
+                .lore(
+                        MessageUtil.component(""),
+                        MessageUtil.component("&7Add, remove, or edit blocks in the mine.")
+                )
+                .asGuiItem(event -> openBlocksGui(player, mine, plugin)));
+
+
+        mainMenu.setItem(5, 1, ItemBuilder.from(Material.ARROW)
+                .name(MessageUtil.component("&6Back"))
+                .asGuiItem(event -> player.performCommand("mines")));
+
+        mainMenu.open(player);
+    }
+
+    private void openBlocksGui(Player player, Mine mine, MinesExpanded plugin) {
+        PaginatedGui blocksMenu = Gui.paginated()
+                .title(MessageUtil.component("Editing Blocks: " + mine.getName()))
+                .rows(5)
+                .disableAllInteractions()
+                .create();
+
+        mine.getBlocks().forEach((material, percentage) -> blocksMenu.addItem(ItemBuilder.from(material)
+                .name(MessageUtil.component("&6" + material.name() + " &7- " + percentage + "%"))
+                .lore(
+                        MessageUtil.component("&6Left-Click &7to edit percentage."),
+                        MessageUtil.component("&6Right-Click &7to remove block.")
+                )
+                .asGuiItem(event -> {
+                    if (event.isRightClick()) {
+                        mine.getBlocks().remove(material);
+                        MineFile file = mine.getFile();
+                        file.save();
+                        player.playSound(player, Sound.BLOCK_NOTE_BLOCK_PLING, 1, 1);
+                        Bukkit.getScheduler().runTask(plugin, () -> openBlocksGui(player, mine, plugin));
+                        return;
+                    }
+                    SignMenu.open(player, new String[]{String.valueOf(percentage), "^^^", "Percentage of", "block in mine."}, lines -> {
+                        try {
+                            float percent = Float.parseFloat(lines[0]);
+                            mine.getBlocks().put(material, percent);
+                            MineFile file = mine.getFile();
+                            file.save();
+                            player.playSound(player, Sound.BLOCK_NOTE_BLOCK_PLING, 1, 1);
+                        } catch (NumberFormatException e) {
+                            player.sendMessage("Invalid number.");
+                        }
+                        Bukkit.getScheduler().runTask(plugin, () -> openBlocksGui(player, mine, plugin));
+                    });
+                })));
+
+        blocksMenu.setPlayerInventoryAction(event -> {
+            ItemStack item = event.getCurrentItem();
+            if (item == null || item.getType() == Material.AIR) return;
+
+            Material material = item.getType();
+            if (mine.hasBlock(material)) return;
+
+            SignMenu.open(player, new String[]{"0", "^^^", "Percentage of", "block in mine."}, lines -> {
+                try {
+                    float percent = Float.parseFloat(lines[0]);
+                    mine.getBlocks().put(material, percent);
+                    MineFile file = mine.getFile();
+                    file.save();
+                } catch (NumberFormatException e) {
+                    player.sendMessage("Invalid number.");
+                }
+                Bukkit.getScheduler().runTask(plugin, () -> openBlocksGui(player, mine, plugin));
+            });
+        });
+
+        blocksMenu.setItem(5, 1, ItemBuilder.from(Material.ARROW).name(MessageUtil.component("&6Back")).asGuiItem(event -> openMainGui(player, mine, plugin)));
+        blocksMenu.setItem(5, 3, ItemBuilder.from(Material.PAPER).name(MessageUtil.component("&cPrevious")).asGuiItem(event -> blocksMenu.previous()));
+        blocksMenu.setItem(5, 7, ItemBuilder.from(Material.PAPER).name(MessageUtil.component("&aNext")).asGuiItem(event -> blocksMenu.next()));
+
+        blocksMenu.open(player);
     }
 }

@@ -4,5 +4,7 @@
 
   "mines.create.no_selection": "&cYou must make a selection first.",
   "mines.create.exists": "&7{0} &cmine already exists. Edit it with <hover:show_text:\"&7Click to edit mine\"><click:run_command:\"/mines edit {0}\">&7/mines edit {0}</click></hover>",
-  "mines.create.success": "&7Mine &a{0} &7created."
+  "mines.create.success": "&7Mine &a{0} &7created.",
+
+  "mines.edit.no_mine": "&cMine &7{0} &cdoes not exist."
 }

@@ -43,6 +43,7 @@ public class MineFile {
             this.config.set("teleport", this.mine.getTeleport());
             this.config.set("min", this.mine.getMin());
             this.config.set("max", this.mine.getMax());
+            this.config.set("blocks", null);
             this.mine.getBlocks().forEach((material, percentage) -> this.config.set("blocks." + material.name(), percentage));
 
             this.config.save(this.file);
