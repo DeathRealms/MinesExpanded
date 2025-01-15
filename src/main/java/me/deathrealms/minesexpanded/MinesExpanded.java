@@ -28,6 +28,7 @@ public final class MinesExpanded extends JavaPlugin {
         instance = this;
 
         MessageUtil.loadMessages(this);
+
         this.mineRegistry = new MineRegistry();
         this.mineRegistry.registerMines();
 

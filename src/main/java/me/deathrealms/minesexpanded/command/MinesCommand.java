@@ -36,13 +36,11 @@ public class MinesCommand {
                             PaginatedGui gui = Gui.paginated()
                                     .title(MessageUtil.component("Mines"))
                                     .rows(6)
+                                    .disableAllInteractions()
                                     .create();
 
-                            gui.setDefaultTopClickAction(event -> event.setCancelled(true));
-                            gui.setPlayerInventoryAction(event -> event.setCancelled(event.isShiftClick()));
-
-                            gui.setItem(6, 3, ItemBuilder.from(Material.PAPER).name(MessageUtil.component("Previous")).asGuiItem(event -> gui.previous()));
-                            gui.setItem(6, 7, ItemBuilder.from(Material.PAPER).name(MessageUtil.component("Next")).asGuiItem(event -> gui.next()));
+                            gui.setItem(6, 3, ItemBuilder.from(Material.PAPER).name(MessageUtil.component("&cPrevious")).asGuiItem(event -> gui.previous()));
+                            gui.setItem(6, 7, ItemBuilder.from(Material.PAPER).name(MessageUtil.component("&aNext")).asGuiItem(event -> gui.next()));
 
                             for (String mine : plugin.mineRegistry().getMines().keySet()) {
                                 List<Component> lore = new ArrayList<>();

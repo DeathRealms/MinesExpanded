@@ -30,7 +30,7 @@ public class HelpCommand implements MECommand {
                                         .collect(Collectors.toList()))))
                         .handler(context -> {
                             String query = context.getOrDefault("query", "").trim();
-                            if (!query.startsWith("mines")) {
+                            if (!query.isEmpty() && !query.startsWith("mines")) {
                                 query = "mines " + query;
                             }
                             plugin.minecraftHelp().queryCommands(query, context.sender());
