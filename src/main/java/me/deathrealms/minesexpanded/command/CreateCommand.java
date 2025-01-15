@@ -60,6 +60,7 @@ public class CreateCommand implements MECommand {
                                 file.save();
 
                                 plugin.mineRegistry().addMine(mine);
+                                plugin.mineServices().addService(mine);
                                 MessageUtil.message(player, Message.CREATE_SUCCESS, name);
                             } catch (Exception e) {
                                 e.printStackTrace();

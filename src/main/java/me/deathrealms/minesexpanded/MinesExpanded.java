@@ -21,6 +21,7 @@ public final class MinesExpanded extends JavaPlugin {
     private BukkitAudiences bukkitAudiences;
     private MinecraftHelp<CommandSender> minecraftHelp;
     private MineRegistry mineRegistry;
+    private MineServices mineServices;
     private static MinesExpanded instance;
 
     @Override
@@ -31,6 +32,9 @@ public final class MinesExpanded extends JavaPlugin {
 
         this.mineRegistry = new MineRegistry();
         this.mineRegistry.registerMines();
+
+        this.mineServices = new MineServices(this.mineRegistry);
+        this.mineServices.registerServices();
 
         LegacyPaperCommandManager<CommandSender> commandManager = new LegacyPaperCommandManager<>(this, ExecutionCoordinator.simpleCoordinator(), SenderMapper.identity());
 
@@ -67,6 +71,7 @@ public final class MinesExpanded extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        this.mineServices.getServices().values().forEach(MineService::stop);
     }
 
     public BukkitAudiences bukkitAudiences() {
@@ -79,6 +84,10 @@ public final class MinesExpanded extends JavaPlugin {
 
     public MineRegistry mineRegistry() {
         return this.mineRegistry;
+    }
+
+    public MineServices mineServices() {
+        return this.mineServices;
     }
 
     public static MinesExpanded instance() {
