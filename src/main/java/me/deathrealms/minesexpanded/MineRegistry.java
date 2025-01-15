@@ -20,6 +20,11 @@ public class MineRegistry {
     }
 
     public void removeMine(String name) {
+        if (!this.MINES.containsKey(name)) return;
+
+        Mine mine = this.MINES.get(name);
+        mine.getFile().delete();
+
         this.MINES.remove(name);
     }
 

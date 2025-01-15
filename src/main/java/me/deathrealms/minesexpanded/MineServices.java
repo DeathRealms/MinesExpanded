@@ -22,6 +22,8 @@ public class MineServices {
     }
 
     public void removeService(Mine mine) {
+        MineService service = this.SERVICES.get(mine);
+        service.stop();
         this.SERVICES.remove(mine);
     }
 

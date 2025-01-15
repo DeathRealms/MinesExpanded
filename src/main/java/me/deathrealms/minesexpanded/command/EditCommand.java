@@ -64,9 +64,7 @@ public class EditCommand implements MECommand {
                         try {
                             int time = Integer.parseInt(lines[0]);
                             mine.setResetTime(time);
-                            MineFile file = mine.getFile();
-                            file.save();
-                            player.playSound(player, Sound.BLOCK_NOTE_BLOCK_PLING, 1, 1);
+                            saveMine(plugin, player, mine);
                         } catch (NumberFormatException e) {
                             player.sendMessage("Invalid number.");
                         }
@@ -87,9 +85,7 @@ public class EditCommand implements MECommand {
                         try {
                             int percentage = Integer.parseInt(lines[0]);
                             mine.setResetPercentage(percentage);
-                            MineFile file = mine.getFile();
-                            file.save();
-                            player.playSound(player, Sound.BLOCK_NOTE_BLOCK_PLING, 1, 1);
+                            saveMine(plugin, player, mine);
                         } catch (NumberFormatException e) {
                             player.sendMessage("Invalid number.");
                         }
@@ -105,8 +101,7 @@ public class EditCommand implements MECommand {
                 )
                 .asGuiItem(event -> {
                     mine.setTeleport(player.getLocation());
-                    mine.getFile().save();
-                    player.playSound(player, Sound.BLOCK_NOTE_BLOCK_PLING, 1, 1);
+                    saveMine(plugin, player, mine);
                     openMainGui(player, mine, plugin);
                 }));
 
@@ -142,9 +137,7 @@ public class EditCommand implements MECommand {
                 .asGuiItem(event -> {
                     if (event.isRightClick()) {
                         mine.getBlocks().remove(material);
-                        MineFile file = mine.getFile();
-                        file.save();
-                        player.playSound(player, Sound.BLOCK_NOTE_BLOCK_PLING, 1, 1);
+                        saveMine(plugin, player, mine);
                         Bukkit.getScheduler().runTask(plugin, () -> openBlocksGui(player, mine, plugin));
                         return;
                     }
@@ -152,9 +145,7 @@ public class EditCommand implements MECommand {
                         try {
                             float percent = Float.parseFloat(lines[0]);
                             mine.getBlocks().put(material, percent);
-                            MineFile file = mine.getFile();
-                            file.save();
-                            player.playSound(player, Sound.BLOCK_NOTE_BLOCK_PLING, 1, 1);
+                            saveMine(plugin, player, mine);
                         } catch (NumberFormatException e) {
                             player.sendMessage("Invalid number.");
                         }
@@ -173,8 +164,7 @@ public class EditCommand implements MECommand {
                 try {
                     float percent = Float.parseFloat(lines[0]);
                     mine.getBlocks().put(material, percent);
-                    MineFile file = mine.getFile();
-                    file.save();
+                    saveMine(plugin, player, mine);
                 } catch (NumberFormatException e) {
                     player.sendMessage("Invalid number.");
                 }
@@ -187,5 +177,16 @@ public class EditCommand implements MECommand {
         blocksMenu.setItem(5, 7, ItemBuilder.from(Material.PAPER).name(MessageUtil.component("&aNext")).asGuiItem(event -> blocksMenu.next()));
 
         blocksMenu.open(player);
+    }
+
+    private void saveMine(MinesExpanded plugin, Player player, Mine mine) {
+        MineFile file = mine.getFile();
+        file.save();
+
+        MineServices services = plugin.mineServices();
+        services.removeService(mine);
+        services.addService(mine);
+
+        player.playSound(player, Sound.BLOCK_NOTE_BLOCK_PLING, 1, 1);
     }
 }
