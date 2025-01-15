@@ -1,14 +1,12 @@
 package me.deathrealms.minesexpanded.util;
 
 public enum Message {
-    PREFIX("prefix"),
+    PREFIX("mines.prefix"),
     RELOAD_SUCCESS("mines.reload.success"),
     CREATE_NO_SELECTION("mines.create.no_selection"),
     CREATE_EXISTS("mines.create.exists"),
     CREATE_SUCCESS("mines.create.success"),
-    REMOVE_NO_MINE("mines.remove.no_mine"),
-    REMOVE_SUCCESS("mines.remove.success"),
-    EDIT_NO_MINE("mines.edit.no_mine");
+    REMOVE_SUCCESS("mines.remove.success");
 
     private final String key;
 
