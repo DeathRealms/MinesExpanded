@@ -33,5 +33,5 @@ jobs:
 
       - uses: actions/upload-artifact@v4
         with:
-          name: MinesExpanded-${{ steps.commit.outputs.short }}.jar
+          name: MinesExpanded-${{ steps.commit.outputs.short }}.zip
           path: server/plugins/MinesExpanded-*.jar
