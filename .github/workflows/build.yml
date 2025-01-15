@@ -29,9 +29,9 @@ jobs:
           arguments: shadowJar --scan
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          VERSION: dev-${{ steps.commit.outputs.short }}
+          COMMIT_HASH: ${{ steps.commit.outputs.short }}
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
-          name: MinesExpanded-dev-${{ steps.commit.outputs.short }}.jar
+          name: MinesExpanded-${{ steps.commit.outputs.short }}.jar
           path: server/plugins/MinesExpanded-*.jar
