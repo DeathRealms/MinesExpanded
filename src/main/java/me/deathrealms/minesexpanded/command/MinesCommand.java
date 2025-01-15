@@ -21,6 +21,7 @@ public class MinesCommand {
     private static final List<MECommand> COMMANDS = List.of(
             new HelpCommand(),
             new CreateCommand(),
+            new RemoveCommand(),
             new ReloadCommand(),
             new EditCommand()
     );

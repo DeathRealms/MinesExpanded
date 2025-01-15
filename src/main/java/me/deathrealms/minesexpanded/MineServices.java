@@ -35,8 +35,7 @@ public class MineServices {
 
     public void registerServices() {
         for (Mine mine : mineRegistry.getMines().values()) {
-            MineService service = new MineService(mine);
-            service.start();
+            addService(mine);
         }
     }
 }

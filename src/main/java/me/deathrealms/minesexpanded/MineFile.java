@@ -31,6 +31,11 @@ public class MineFile {
         }
     }
 
+    public void delete() {
+        if (!this.file.exists()) return;
+        this.file.delete();
+    }
+
     public void reload() {
         this.config = YamlConfiguration.loadConfiguration(this.file);
     }

@@ -6,6 +6,8 @@ public enum Message {
     CREATE_NO_SELECTION("mines.create.no_selection"),
     CREATE_EXISTS("mines.create.exists"),
     CREATE_SUCCESS("mines.create.success"),
+    REMOVE_NO_MINE("mines.remove.no_mine"),
+    REMOVE_SUCCESS("mines.remove.success"),
     EDIT_NO_MINE("mines.edit.no_mine");
 
     private final String key;
