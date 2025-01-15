@@ -74,6 +74,13 @@ shadowJar {
         exclude(dependency("de\\.rapha149\\.signgui:signgui:.*"))
     }
     destinationDirectory.set(file("server/plugins"))
+
+    def commitHash = System.getenv("COMMIT_HASH") ?: "unknown"
+    if (commitHash == "unknown") {
+        archiveFileName.set("MinesExpanded-${version}.jar")
+    } else {
+        archiveFileName.set("MinesExpanded-${version}-${commitHash}.jar")
+    }
 }
 
 build.dependsOn shadowJar
