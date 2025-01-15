@@ -5,8 +5,9 @@ import dev.triumphteam.gui.guis.Gui;
 import dev.triumphteam.gui.guis.PaginatedGui;
 import me.deathrealms.minesexpanded.Mine;
 import me.deathrealms.minesexpanded.MineFile;
+import me.deathrealms.minesexpanded.MineServices;
 import me.deathrealms.minesexpanded.MinesExpanded;
-import me.deathrealms.minesexpanded.util.Message;
+import me.deathrealms.minesexpanded.command.parser.MineParser;
 import me.deathrealms.minesexpanded.util.MessageUtil;
 import me.deathrealms.minesexpanded.util.SignMenu;
 import org.bukkit.Bukkit;
@@ -17,7 +18,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.incendo.cloud.bukkit.BukkitCommandManager;
 import org.incendo.cloud.description.Description;
-import org.incendo.cloud.parser.standard.StringParser;
 
 public class EditCommand implements MECommand {
 
@@ -29,17 +29,12 @@ public class EditCommand implements MECommand {
                         .commandDescription(Description.of("Edit a mine."))
                         .permission("minesexpanded.command.edit")
                         .senderType(Player.class)
-                        .required("name", StringParser.stringParser())
+                        .required("mine", MineParser.mineParser())
                         .handler(context -> {
                             Player player = context.sender();
-                            String name = context.get("name");
+                            Mine mine = context.get("mine");
 
-                            if (!plugin.mineRegistry().hasMine(name)) {
-                                MessageUtil.message(player, Message.EDIT_NO_MINE, name);
-                                return;
-                            }
-
-                            openMainGui(player, plugin.mineRegistry().getMine(name), plugin);
+                            openMainGui(player, mine, plugin);
                         })
         );
     }
